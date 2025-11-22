@@ -1,0 +1,9 @@
+.clj-kondo/.cache
+.cpcache
+.lsp
+.idea
+.nrepl-port
+.shadow-cljs
+/target
+.DS_Store
+/.dir-locals.el
