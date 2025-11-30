@@ -1,7 +1,8 @@
 (ns missionary-basic-walkthrough
   (:require [missionary.core :as m]))
 
-;; Copied from https://github.com/leonoel/missionary/wiki/Basic-Walkthrough:-Tasks-&-Flows
+;; Copied from
+;; https://github.com/leonoel/missionary/wiki/Basic-Walkthrough:-Tasks-&-Flows
 
 ;; TODO: Why all the mentions of clj? Isn't it (mostly) cljs too?
 
@@ -19,8 +20,8 @@
 
   ;; nomis: `m/?` runs a task. (See doc string for more detail.)
 
-  (m/? (m/timeout (m/sleep 1000 :value) 800))  ; => nil
-  (m/? (m/timeout (m/sleep 1000 :value) 1200)) ; => :value
+  (m/? (m/timeout (m/sleep 1000 :my-value) 800))  ; => nil
+  (m/? (m/timeout (m/sleep 1000 :my-value) 1200)) ; => :my-value
 
   ;; Use a sequential process block to create a task from a body of forms.
 
