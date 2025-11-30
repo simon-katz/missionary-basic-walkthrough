@@ -1,4 +1,4 @@
-(ns missionary-basic-walkthrough
+(ns basic-walkthrough
   (:require [missionary.core :as m]))
 
 ;; Copied from
