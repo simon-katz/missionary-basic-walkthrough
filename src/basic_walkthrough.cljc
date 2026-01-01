@@ -4,40 +4,31 @@
 ;; Copied from
 ;; https://github.com/leonoel/missionary/wiki/Basic-Walkthrough:-Tasks-&-Flows
 
-;; TODO: Why all the mentions of clj? Isn't it (mostly) cljs too?
-
 (comment
 
   ;; Task
   ;; ====
 
+  ;; Skip ahead to "Nomis task examples" to see some of these examples
+  ;; being run.
+
   ;; A Missionary task is a value representing an action to be performed.
 
   ;; Use various API functions to create tasks.
 
-  (m/sleep 800) ; a sleep task
+  (m/sleep 800)                  ; a sleep task
   (m/timeout (m/sleep 1000) 800) ; a timeout task
-
-  ;; nomis: `m/?` runs a task. (See doc string for more detail.)
-
-  (m/? (m/timeout (m/sleep 1000 :my-value) 800))  ; => nil
-  (m/? (m/timeout (m/sleep 1000 :my-value) 1200)) ; => :my-value
 
   ;; Use a sequential process block to create a task from a body of forms.
 
-  (m/? (m/sp (println "one") :two))
-  ;; -> one
-  ;; => :two
-
+  (m/sp (println "one") :two)
 
   ;; Compose tasks, inside a process block, by running them and waiting on their
   ;; values with `m/?`.
 
-  (m/? (m/sp (println "Let's take a nap...")
-             (str (m/? (m/sleep 900 "Hi "))
-                  (m/? (m/sleep 100 "there!")))))
-  ;; -> Let's take a nap...
-  ;; => "Hi there!"
+  (m/sp (println "Let's take a nap...")
+        (str (m/? (m/sleep 900 "Hi "))
+             (m/? (m/sleep 100 "there!"))))
 
   ;; A task is not executed when created, it should be explicitly started.
 
@@ -81,43 +72,96 @@
 
   ;; Alternatively, if the host platform supports blocking thread, a task can be
   ;; executed using the `m/?` function outside of any process block.
-  ;;
-  ;; clj only
 
-  (m/? (m/sp :hello)) ; => :hello
+  #?(:clj (m/? (m/sp :hello))) ; => :hello
 
   ;; Task blocking on IO or taking a lot of CPU time can be created with `m/via`
   ;; to be executed on an OS thread.
-  ;;
-  ;; clj only
 
-  (m/? (m/via m/blk (Thread/sleep 1000) :done)) ; => :done
-  (m/? (m/via m/cpu (+ 1 1))) ; => 2
+  #?(:clj (m/via m/blk (Thread/sleep 1000) :done))
+  #?(:clj (m/via m/cpu (+ 1 1)))
+
+  ;; ---------------------------------------------------------------------------
 
 
   ;; Task Examples
   ;; -------------
 
   ;; Create two tasks and read them values sequentially.
-  ;;
-  ;; clj
 
-  (let [v1 (m/? (m/sp "hi"))
-        v2 (m/? (m/sp "there"))]
-    (printf "Read %s from %s%n" v1 v2))
+  #?(:clj (let [v1 (m/? (m/sp "hi"))
+                v2 (m/? (m/sp "there"))]
+            (printf "Read %s from %s%n" v1 v2)))
   ;; -> Read hi from there
   ;; => nil
 
   ;; Create two tasks and read them values asynchronously.
-  ;;
-  ;; clj
 
-  (let [[v1 v2] (m/? (m/join vector
-                             (m/sp "hi")
-                             (m/sp "there")))]
-    (printf "Read %s from %s%n" v1 v2))
+  #?(:clj (let [[v1 v2] (m/? (m/join vector
+                                     (m/sp "hi")
+                                     (m/sp "there")))]
+            (printf "Read %s from %s%n" v1 v2)))
   ;; -> Read hi from there
   ;; => nil
+
+  ;; ---------------------------------------------------------------------------
+  ;; >>>> BEGIN Nomis task examples
+
+  ;; Let's run some of the earlier tasks, and some others too:
+
+  #?(:clj (m/?            (m/sleep 2000)))               ; 2000 ms delay, => nil
+  #?(:clj (m/?            (m/sleep 2000 :v)))            ; 2000 ms delay, => :v
+  #?(:clj (m/? (m/timeout (m/sleep 2000 :v)  4000)))     ; 2000 ms delay, => :v
+  #?(:clj (m/? (m/timeout (m/sleep 2000 :v1) 4000 :v2))) ; 2000 ms delay, => :v1
+  #?(:clj (m/? (m/timeout (m/sleep 2000 :v)  1000)))     ; 1000 ms delay, => nil
+  #?(:clj (m/? (m/timeout (m/sleep 2000 :v1) 1000 :v2))) ; 1000 ms delay, => :v2
+
+  #?(:clj (m/? (m/sp (println "one") :two)))
+  ;; -> one
+  ;; => :two
+
+  #?(:clj (m/? (m/sp (println "Let's take a nap...")
+                     (str (m/? (m/sleep 900 "Hi "))
+                          (m/? (m/sleep 100 "there!"))))))
+  ;; -> Let's take a nap...
+  ;; => "Hi there!"
+
+  #?(:clj (m/? (m/via m/blk (Thread/sleep 1000) :done))) ; => :done
+  #?(:clj (m/? (m/via m/cpu (+ 1 1))))                   ; => 2
+
+  ;; Simpler example of composing tasks inside a process block:
+
+  #?(:clj (m/? (m/sp [(m/? (m/sp :v1))
+                      (m/? (m/sp :v2))])))
+
+  ;; Some definitions from https://github.com/leonoel/task
+
+  (defn success [x] (fn [! _] (! x) #(do)))
+  (defn failure [x] (fn [_ !] (! x) #(do)))
+
+  ;; And uses of them:
+
+  #?(:clj (m/? (success 12))) ; => 12
+  #?(:clj (m/? (failure (Exception. "KO")))) ; =>throws java.lang.Exception KO
+
+  ;; Some tasks of my own:
+
+  (defn task-001 [x] (fn [!s _] (!s (+ 1 (* 10 x))) #(do)))
+  (defn task-002 [x] (fn [!s _] (!s (+ 2 (* 10 x))) #(do)))
+  (defn task-003 [x] (fn [!s _] (!s (+ 3 (* 10 x))) #(do)))
+
+  ;; More-deeply nested tasks:
+
+  #?(:clj (m/? (task-001 0)))                                   ; => 1
+  #?(:clj (m/? (task-001 (m/? (task-002 0)))))                  ; => 21
+  #?(:clj (m/? (task-001 (m/? (task-002 (m/? (task-003 0))))))) ; => 321
+
+  ;; Propagation of failures:
+  #?(:clj (m/? (task-001 (m/? (task-002 (m/? (failure (Exception. "KO"))))))))
+  ;; =>throws java.lang.Exception KO
+
+  ;; <<<< END Nomis task examples
+  ;; ---------------------------------------------------------------------------
 
 
   ;; Flow
@@ -141,23 +185,19 @@
   (m/ap (println (m/?> (m/seed [1 2]))))
 
   ;; Flows are not executed/consumed at creation. You must execute a task to
-  ;; consume them. Use the `m/reduce` to define a task from a flow.
+  ;; consume them. Use `m/reduce` to define a task from a flow.
 
-  ;; clj
-
-  (let [a-flow (m/seed (range 4))
-        a-task (m/reduce conj a-flow)]
-    (m/? a-task))
+  #?(:clj (let [a-flow (m/seed (range 4))
+                a-task (m/reduce conj a-flow)]
+            (m/? a-task)))
   ;; => [0 1 2 3]
 
   ;; Tip: If a flow generates side-effects, drain it with reduce and (constantly
   ;; nil).
 
-  ;; clj
-
-  (m/? (m/reduce
-        (constantly nil)
-        (m/ap (println "Hi" (m/?> ##Inf (m/seed (range 5)))))))
+  #?(:clj (m/? (m/reduce
+                (constantly nil)
+                (m/ap (println "Hi" (m/?> ##Inf (m/seed (range 5))))))))
   ;; -> Hi 4
   ;;    Hi 3
   ;;    Hi 2
@@ -171,28 +211,26 @@
   ;; Produce 1000 values asynchronously and read them as soon as they
   ;; are available.
 
-  ;; clj
+  #?(:clj (let [begin (System/currentTimeMillis)
+                ;; create a flow of values generated by asynchronous tasks
+                inputs (repeat 1000
+                               ;; a task has no identity; it can be reused
+                               (m/via m/cpu "hi"))
+                values (m/ap
+                         (let [;; Create a flow of tasks and fork on every task
+                               ;; in parallel.
+                               flow (m/seed inputs)
+                               task (m/?> ##Inf flow)]
+                           ;; Get a forked task value when available.
+                           (m/? task)))
 
-  (let [begin (System/currentTimeMillis)
-        ;; create a flow of values generated by asynchronous tasks
-        inputs (repeat 1000
-                       ;; a task has no identity; it can be reused
-                       (m/via m/cpu "hi"))
-        values (m/ap
-                 (let [;; Create a flow of tasks and fork on every task
-                       ;; in parallel.
-                       flow (m/seed inputs)
-                       task (m/?> ##Inf flow)]
-                   ;; Get a forked task value when available.
-                   (m/? task)))
-
-        ;; drain the flow of values and count them
-        n (m/? ;; tasks are executed, and flow is consume here!
-           (m/reduce (fn [acc v]
-                       (assert (= "hi" v))
-                       (inc acc))
-                     0 values))]
-    (println "Read" n "msgs in" (- (System/currentTimeMillis) begin) "ms"))
+                ;; drain the flow of values and count them
+                n (m/? ;; tasks are executed, and flow is consume here!
+                   (m/reduce (fn [acc v]
+                               (assert (= "hi" v))
+                               (inc acc))
+                             0 values))]
+            (println "Read" n "msgs in" (- (System/currentTimeMillis) begin) "ms")))
   ;; -> Read 1000 msgs in 14 ms
   ;; => nil
   )
