@@ -188,6 +188,9 @@
   ;; Flow
   ;; ====
 
+  ;; Skip ahead to "Nomis flow examples" to see some of these examples
+  ;; being run.
+
   ;; A Missionary flow is a value representing a process able to produce an
   ;; arbitrary number of values, at any point in time, before terminating.
 
@@ -254,4 +257,37 @@
             (println "Read" n "msgs in" (- (System/currentTimeMillis) begin) "ms")))
   ;; -> Read 1000 msgs in 14 ms
   ;; => nil
+
+  ;; ---------------------------------------------------------------------------
+  ;; >>>> BEGIN Nomis flow examples
+
+  ;; Let's run some of the earlier flows:
+
+  #?(:clj (defn flow->values [flow]
+            (let [task (m/reduce conj flow)]
+              (m/? task))))
+
+  #?(:clj (flow->values (m/seed [1 2 3])))
+  ;; => [1 2 3]
+
+  #?(:clj (flow->values (m/zip vector (m/seed (range 3)) (m/seed [:a :b :c]))))
+  ;; => [[0 :a] [1 :b] [2 :c]]
+
+  #?(:clj (flow->values (m/eduction (map inc) (m/seed [1 2 3]))))
+  ;; => [2 3 4]
+
+  #?(:clj (flow->values (m/ap (println (m/?> (m/seed [1 2]))))))
+  ;; -> 1
+  ;;    2
+  ;; => [nil nil]
+
+  ;; And some other flows:
+
+  #?(:clj (flow->values (m/ap (println (m/?< (m/seed [1 2]))))))
+  ;; -> 1
+  ;;    2
+  ;; => [nil nil]
+
+  ;; <<<< END Nomis flow examples
+  ;; ---------------------------------------------------------------------------
   )
