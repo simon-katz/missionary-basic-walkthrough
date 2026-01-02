@@ -163,6 +163,27 @@
   ;; <<<< END Nomis task examples
   ;; ---------------------------------------------------------------------------
 
+  ;; ---------------------------------------------------------------------------
+  ;; >>>> BEGIN A simple (and probably broken) implementation of `?`:
+
+  ;; I probably don't understand failure.
+
+  #?(:clj
+     (defn ? [task]
+       (let [!s-promise (promise)
+             _cancel!   (task (fn [v] (deliver !s-promise v))
+                              (fn [v]
+                                ;; This is probably very wrong.
+                                (throw (ex-info "Failure" {:v v}))))]
+         @!s-promise)))
+
+  #?(:clj (? (success 12))) ; => 12
+  #?(:clj (? (task-001 (? (task-002 (? (task-003 0))))))) ; => 321
+  #?(:clj (? (failure (Exception. "KO")))) ; =>throws
+  #?(:clj (? (task-001 (? (task-002 (? (failure (Exception. "KO")))))))) ; =>throws
+
+  ;; <<<< END A simple (and probably broken) implementation of `?`
+  ;; ---------------------------------------------------------------------------
 
   ;; Flow
   ;; ====
