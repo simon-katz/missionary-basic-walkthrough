@@ -116,8 +116,7 @@
     (m/sp (println "Hello")
           (m/? (m/sleep 500))
           (throw (ex-info "Something went wrong." {}))))
-  ;; NOTE: https://github.com/leonoel/task says that a task must not throw.
-  ;;       Hmmmm.
+  ;; NOTE: See `nomis-missionary/question-about-tasks-throwing`.
 
   (m/? unreliable-hello-world)
   ;; -> Hello

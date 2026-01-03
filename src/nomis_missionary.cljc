@@ -31,3 +31,13 @@
   ;; -> Read hi from there
   ;; => nil
   )
+
+;; Questions
+;; =========
+
+#_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
+(def question-about-tasks-throwing
+  ;; NOTE: https://github.com/leonoel/task says that a •task• must not throw.
+  ;;       But there are examples that have •task•s throwing.
+  ;;       Hmmmm.
+  nil)
