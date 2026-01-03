@@ -131,16 +131,26 @@
 
   ;; What happened here is both •task•s have been run concurrently, each has
   ;; printed Hello, then the second •task• failed after 500 ms, then error was
-  ;; propagated to the join •task•, making it fail as well. Modeling concurrency
-  ;; in functional style gave us supervision for free, we don't have to program
-  ;; defensively, operators do what you expect by default.
+  ;; propagated to the join •task•, making it fail as well.
+  ;;
+  ;; Modeling concurrency in functional style has given us supervision for free.
+  ;; We don't have to program defensively; operators do what you expect
+  ;; by default.
 
-  ;; In fact, under the hood, `m/join` reacted to the error by *cancelling* the
-  ;; other •action•, allowing it to gracefully shutdown before rethrowing the
-  ;; error. The cancelling signal was propagated to the `m/sleep` •action•,
-  ;; which deregistered itself from the scheduler and failed. Then, the sleep
-  ;; failure has been rethrown in the sequential process, terminating it.
-  ;; Only then, `m/join` propagated the first error.
+  ;; In fact, under the hood:
+
+  ;; - `m/join` caught the exception that was thrown by the
+  ;;   `unreliable-chatty-hello-world` •action•.
+
+  ;; - `m/join` cancelled the `slowmo-hello-world` •action•, allowing it to
+  ;;   gracefully shutdown.
+  ;;   - The cancelling signal was propagated to the `m/sleep` •action•, which
+  ;;     deregistered itself from the scheduler and failed.
+  ;;   - The sleep failure was rethrown in the sequential process,
+  ;;     terminating it.
+
+  ;; - After the above was all done:
+  ;;   - `m/join` propagated (re-threw) the error.
 
   ;; What that means is if we want to ensure some •action• is done before
   ;; terminating, we can use `try`/`finally` just as we do with threads.
