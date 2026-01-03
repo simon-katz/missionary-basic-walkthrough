@@ -182,6 +182,14 @@
   #?(:clj (? (failure (Exception. "KO")))) ; =>throws
   #?(:clj (? (task-001 (? (task-002 (? (failure (Exception. "KO")))))))) ; =>throws
 
+  #?(:clj (let [[v1 v2] (? (m/join vector
+                                   (m/sp "hi")
+                                   (m/sp "there")))]
+            (printf "Read %s from %s%n" v1 v2)))
+  ;; -> Read hi from there
+  ;; => nil
+
+
   ;; <<<< END A simple (and probably broken) implementation of `?`
   ;; ---------------------------------------------------------------------------
 
