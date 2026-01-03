@@ -46,7 +46,7 @@
   ;; -> Hello world !
   ;; => nil
 
-  ;; Note : it won't work in a clojurescript REPL because it requires to block
+  ;; Note : it won't work in a ClojureScript REPL because it requires to block
   ;; calling thread (more on that later).
 
 
