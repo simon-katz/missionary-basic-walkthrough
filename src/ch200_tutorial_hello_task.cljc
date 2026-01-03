@@ -28,9 +28,9 @@
   ;; Hello World
   ;; ===========
 
-  ;; Your main tool to work with •task•s is the `sp` macro. It takes a body of
+  ;; Your main tool to work with •task•s is the `m/sp` macro. It takes a body of
   ;; clojure forms and wraps it in a •task•. The •action• performed by this
-  ;; •task• is the sequential evaluation of these forms. `sp` stands for
+  ;; •task• is the sequential evaluation of these forms. `m/sp` stands for
   ;; /sequential process/.
 
   (def hello-world
@@ -53,7 +53,7 @@
   ;; Sequential composition
   ;; ======================
 
-  ;; Let's look at another •task• operator: `sleep`. The •task•s it creates
+  ;; Let's look at another •task• operator: `m/sleep`. The •task•s it creates
   ;; perform the •action• of doing nothing for a given amount of milliseconds.
 
   (def nap (m/sleep 1000))
