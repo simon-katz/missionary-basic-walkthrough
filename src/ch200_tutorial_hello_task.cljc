@@ -95,7 +95,9 @@
   ;; concurrently and merge results with an arbitrary function.
 
   (def chatty-hello-world
-    (m/join vector slowmo-hello-world slowmo-hello-world))
+    (m/join vector
+            slowmo-hello-world
+            slowmo-hello-world))
 
   (m/? chatty-hello-world)
   ;; -> Hello
@@ -122,7 +124,9 @@
   ;; =>throws after 500 ms
 
   (def unreliable-chatty-hello-world
-    (m/join vector slowmo-hello-world unreliable-hello-world))
+    (m/join vector
+            slowmo-hello-world
+            unreliable-hello-world))
 
   (m/? unreliable-chatty-hello-world)
   ;; -> Hello
@@ -164,7 +168,9 @@
            (finally
              (println "!")))))
 
-  (m/? (m/join vector unreliable-hello-world finally-hello-world))
+  (m/? (m/join vector
+               unreliable-hello-world
+               finally-hello-world))
   ;; -> Hello
   ;; -> Hello
   ;; -> !
@@ -191,7 +197,10 @@
             (println "Hello")
             (Thread/sleep 500)
             (println "World")))
-  (time (m/? (m/join vector (m/sp (blocking-hello-world)) (m/sp (blocking-hello-world)))))
+
+  (time (m/? (m/join vector
+                     (m/sp (blocking-hello-world))
+                     (m/sp (blocking-hello-world)))))
   ;; -> Hello
   ;; -> World
   ;; -> Hello
@@ -206,7 +215,9 @@
   ;; IO bound (BLocKing) •task•s. With this new insight we can fix our previous
   ;; example:
 
-  (time (m/? (m/join vector (m/via m/blk (blocking-hello-world)) (m/via m/blk (blocking-hello-world)))))
+  (time (m/? (m/join vector
+                     (m/via m/blk (blocking-hello-world))
+                     (m/via m/blk (blocking-hello-world)))))
   ;; -> HelloHello
   ;; ->
   ;; -> World
