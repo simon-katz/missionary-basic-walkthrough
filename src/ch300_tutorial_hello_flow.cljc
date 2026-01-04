@@ -43,7 +43,7 @@
 
   ;; Let's introduce the `m/ap` macro. `m/ap` is to •flow•s what `m/sp` is to
   ;; •task•s. Like `m/sp`, it can be parked with `m/?`, but it has an additional
-  ;; superpower : it can be *forked*.
+  ;; superpower: it can be *forked*.
 
   (def hello-world
     (m/ap
@@ -51,10 +51,10 @@
       (m/? (m/sleep 1000))))
 
   (m/? (m/reduce conj hello-world))
-  ;; -> Hello
-  ;; -> World
-  ;; -> !
-  ;; => [nil nil nil]
+  ;; -> (straight away) Hello
+  ;; -> (1000 ms later) World
+  ;; -> (1000 ms later) !
+  ;; => (1000 ms later) [nil nil nil]
 
   ;; The `m/?>` operator pulls the first seeded value, forks evaluation and
   ;; moves on until end of body, producing result `nil`, then *backtracks*
