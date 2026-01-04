@@ -229,8 +229,8 @@
                            ;; Get a forked •task• value when available.
                            (m/? task)))
                 ;; Drain the •flow• of values and count them:
-                n (m/? ; The •task•s are executed and the •flow• is
-                       ; consumed here.
+                n (m/?
+                   ;; The •task•s are executed and the •flow• is consumed here.
                    (m/reduce (fn [acc v]
                                (assert (= "hi" v))
                                (inc acc))
