@@ -101,6 +101,12 @@
             (m/reduce conj)))
   ;; => [24 79 9 37]
 
+  ;; Nomis example:
+  (m/? (->> (clock [1 2 3 4 5 6 60 7 8 9 10 60])
+            (debounce 50)
+            (m/reduce conj)))
+  ;; => [6 10 60]
+
 
   ;; Concurrent forking
   ;; ==================
