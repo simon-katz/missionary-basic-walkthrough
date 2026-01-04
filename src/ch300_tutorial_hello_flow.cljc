@@ -41,9 +41,13 @@
   ;; NOTE: (nomis) ^^ Huh? We've run •task•s, so we've performed •action•s,
   ;;       right? Maybe this is an edit-o.
 
-  ;; Let's introduce the `m/ap` macro. `m/ap` is to •flow•s what `m/sp` is to
-  ;; •task•s. Like `m/sp`, it can be parked with `m/?`, but it has an additional
-  ;; superpower: it can be *forked*.
+  ;; Let's introduce the `m/ap` macro.
+
+  ;; `m/ap` creates a •flow• from a body of forms. An `m/ap` form is called an
+  ;; /ambiguous process block/.
+
+  ;; `m/ap` is to •flow•s what `m/sp` is to •task•s. Like `m/sp`, it can be
+  ;; parked with `m/?`, but it has an additional superpower: it can be *forked*.
 
   (def hello-world
     (m/ap
@@ -72,7 +76,7 @@
   ;; transfers evaluation control to the forked process, and waits for
   ;; evaluation to be completed before pulling another value from the •flow•.
   ;; In some cases though, we want the •flow• to keep priority over the forked
-  ;; process, so it can be shutdowned when more values become available.
+  ;; process, so it can be shut down when more values become available.
   ;; That kind of forking is implemented by `m/?<`.
 
   ;; We can use it to implement debounce operators. A debounced •flow• is
