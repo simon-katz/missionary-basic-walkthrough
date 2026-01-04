@@ -37,6 +37,10 @@
   ;; ====================
 
   ;; Not very interesting so far, because we haven't performed any •action• yet.
+
+  ;; NOTE: (nomis) ^^ Huh? We've run •task•s, so we've performed •action•s,
+  ;;       right? Maybe this is an edit-o.
+
   ;; Let's introduce the `m/ap` macro. `m/ap` is to •flow•s what `m/sp` is to
   ;; •task•s. Like `m/sp`, it can be parked with `m/?`, but it has an additional
   ;; superpower : it can be *forked*.
