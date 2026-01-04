@@ -1,5 +1,7 @@
 (ns ch100-basic-walkthrough
-  (:require [missionary.core :as m]))
+  (:require
+   [missionary.core :as m]
+   [nomis-missionary]))
 
 ;; Copied from
 ;; https://github.com/leonoel/missionary/wiki/Basic-Walkthrough:-Tasks-&-Flows
@@ -178,6 +180,8 @@
   (m/eduction (map inc) (m/seed [1 2 3]))
 
   ;; Use ambiguous process block to create a •flow• from a body of forms.
+  ;; NOTE: See
+  ,,       `nomis-missionary/what-is-an-ambiguous-process-block?`
 
   ;; In an ambiguous process block, various functions can fork the process on
   ;; arrival of a new value from a •flow•. See documentation for `m/?>` and
