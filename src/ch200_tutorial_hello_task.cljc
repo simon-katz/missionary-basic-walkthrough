@@ -71,7 +71,7 @@
           (m/? nap)
           (println "!")))
 
-  ;; NOTE: Note the interspersing of •task•s and regular Clojure code in
+  ;; NOTE: (nomis) Note the interspersing of •task•s and regular Clojure code in
   ;;       `slowmo-hello-world`.
 
   (m/? slowmo-hello-world)
@@ -118,7 +118,7 @@
     (m/sp (println "Hello")
           (m/? (m/sleep 500))
           (throw (ex-info "Something went wrong." {}))))
-  ;; NOTE: See
+  ;; NOTE: (nomis) See
   ,,       nomis-missionary/can-tasks-throw?
 
   (m/? unreliable-hello-world)

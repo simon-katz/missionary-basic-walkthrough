@@ -180,7 +180,7 @@
   (m/eduction (map inc) (m/seed [1 2 3]))
 
   ;; Use ambiguous process block to create a •flow• from a body of forms.
-  ;; NOTE: See
+  ;; NOTE: (nomis) See
   ,,       `nomis-missionary/what-is-an-ambiguous-process-block?`
 
   ;; In an ambiguous process block, various functions can fork the process on
