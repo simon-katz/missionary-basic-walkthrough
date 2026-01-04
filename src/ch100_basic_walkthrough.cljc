@@ -81,11 +81,9 @@
   #?(:clj (m/via m/blk (Thread/sleep 1000) :done))
   #?(:clj (m/via m/cpu (+ 1 1)))
 
-  ;; ---------------------------------------------------------------------------
-
 
   ;; Task Examples
-  ;; -------------
+  ;; =============
 
   ;; Create two •task•s and read them values sequentially.
 
@@ -209,7 +207,7 @@
   ;; => nil
 
   ;; Flow Examples
-  ;; -------------
+  ;; =============
 
   ;; Produce 1000 values asynchronously and read them as soon as they
   ;; are available.
