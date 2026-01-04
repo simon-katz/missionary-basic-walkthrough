@@ -4,32 +4,30 @@
 ;; Copied from
 ;; https://github.com/leonoel/missionary/blob/master/doc/tutorials/hello_flow.md
 
-;; This tutorial will help you familiarize with the •flow• abstraction. A •flow•
-;; is a value representing a process able to produce an arbitrary number of
-;; values before terminating. Like •task•s, they're asynchronous under the hood
-;; and also support failure and graceful shutdown.
+;; This tutorial will help you familiarize with the •flow• abstraction.
+
+;; A •flow• is a value representing a process able to produce an arbitrary
+;; number of values before terminating. Like •task•s, they're asynchronous under
+;; the hood and also support failure and graceful shutdown.
 
 (comment
 
   ;; Basic operations
   ;; ================
 
-  ;; You can build a •flow• from an arbitrary collection with `m/seed`, and you
-  ;; can reduce •flow•s like collections with `m/reduce`, turning it into
-  ;; a •task•.
+  ;; You can build a •flow• from an arbitrary collection with `m/seed`:
 
-  ;; A •flow• producing the 10 first integers
+  (def input ; a •flow• that produces the 10 first integers
+    (m/seed (range 10)))
 
-  (def input (m/seed (range 10)))
+  ;; You can reduce a •flow• with `m/reduce`, turning it into a •task•:
 
-  ;; A •task• producing the sum of the 10 first integers
+  (def sum ; a •task• that produces the sum of the 10 first integers
+    (m/reduce + input))
 
-  (def sum (m/reduce + input))
+  (m/? sum) ; => 45
 
-  (m/? sum)
-  ;; => 45
-
-  ;; `m/eduction` passes a •flow• through a transducer.
+  ;; `m/eduction` passes a •flow• through a transducer:
 
   (m/? (m/reduce conj (m/eduction (partition-all 4) input)))
   ;; => [[0 1 2 3] [4 5 6 7] [8 9]]
