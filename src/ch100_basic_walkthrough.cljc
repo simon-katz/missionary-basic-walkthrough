@@ -179,9 +179,8 @@
   (m/zip vector (m/seed (range 3)) (m/seed [:a :b :c]))
   (m/eduction (map inc) (m/seed [1 2 3]))
 
-  ;; Use ambiguous process block to create a •flow• from a body of forms.
-  ;; NOTE: (nomis) See
-  ,,       `nomis-missionary/what-is-an-ambiguous-process-block?`
+  ;; `m/ap` creates a •flow• from a body of forms. An `m/ap` form is called an
+  ;; /ambiguous process block/.
 
   ;; In an ambiguous process block, various functions can fork the process on
   ;; arrival of a new value from a •flow•. See documentation for `m/?>` and
