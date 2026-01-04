@@ -40,3 +40,18 @@
   ;;       But there are examples that have •task•s throwing.
   ;;       Hmmmm.
   nil)
+
+#_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
+(def ooh!-debounced-flow!
+  ;; A debounced •flow• is a •flow• emitting only values that are not followed
+  ;; by another one within a given delay.
+  ;;
+  ;; So can we use this to implement `postponed-events/c-throttle` in
+  ;; `nomis-timelines`?
+  ;;
+  ;; What would be the right way to get a •flow• from a series of events?
+  ;; - See https://github.com/leonoel/missionary/wiki/Continuous-flows#integrated-from-discrete-events
+  ;; - If you can't make sense of that (or perhaps initially in any case),
+  ;;   perhaps `reset!` an atom to each event and use `m/watch` to create
+  ;;   a •flow•.
+  nil)
