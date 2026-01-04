@@ -1,5 +1,7 @@
 (ns ch200-tutorial-hello-task
-  (:require [missionary.core :as m]))
+  (:require
+   [missionary.core :as m]
+   [nomis-missionary]))
 
 ;; Copied from
 ;; https://github.com/leonoel/missionary/blob/master/doc/tutorials/hello_task.md
@@ -116,7 +118,8 @@
     (m/sp (println "Hello")
           (m/? (m/sleep 500))
           (throw (ex-info "Something went wrong." {}))))
-  ;; NOTE: See `nomis-missionary/question-about-tasks-throwing`.
+  ;; NOTE: See
+  ,,       nomis-missionary/can-tasks-throw?
 
   (m/? unreliable-hello-world)
   ;; -> Hello
