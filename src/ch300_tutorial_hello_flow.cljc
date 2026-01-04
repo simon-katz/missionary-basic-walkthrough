@@ -34,6 +34,7 @@
   (m/? (m/reduce conj (m/eduction (partition-all 4) input)))
   ;; => [[0 1 2 3] [4 5 6 7] [8 9]]
 
+
   ;; Ambiguous evaluation
   ;; ====================
 
@@ -93,6 +94,7 @@
             (debounce 50)
             (m/reduce conj)))
   ;; => [24 79 9 37]
+
 
   ;; Concurrent forking
   ;; ==================
