@@ -64,7 +64,7 @@
   ;; -> Hello world
   ;; => (a cancel-fn)
 
-  ;; Cancel a •task• using its cancel function.
+  ;; Cancel an •action• using its cancel function.
 
   (def a-task (m/sleep 15000 :done))
   (def cancel (a-task #(println :ok %) (fn [_] (println :KO))))
